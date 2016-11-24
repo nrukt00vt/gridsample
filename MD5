@@ -1,0 +1,10 @@
+58d11f57923e501dda9800498cd19de7 *DESCRIPTION
+5ff2430c98596d09597bc76889254c7d *NAMESPACE
+4ba384fe909aa7b73facb75d0df317ab *R/gs_mode.R
+4562b910b0b714e7be8b08ec7aa8d62e *R/gs_rasterize.R
+798cfb98788ea583ec82c2138da5110b *R/gs_sample.R
+ce45de1cb7b7f9c914ec7476ee20c623 *R/gs_zonal_raster.R
+3953c2dff546840a97e2b06d8555d1fa *man/gs_mode.Rd
+09786a24e043b7c939d207a5b2f070d7 *man/gs_rasterize.Rd
+f6ea7c2410d048b99f5a787f957a9171 *man/gs_sample.Rd
+47c93ce20940c6ce758e193416e2e210 *man/gs_zonal_raster.Rd
