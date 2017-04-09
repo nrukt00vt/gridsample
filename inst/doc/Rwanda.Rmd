@@ -1,0 +1,81 @@
+---
+title: "Recreating the 2010 Rwanda DHS using GridSample"
+author: "Nick W Ruktanonchai, Dana R Thomson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Rwanda 2010 DHS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+Here we use the GridSample package to replicate the sample design of the 2010 Rwanda DHS. Further details are available at: <www.dhsprogram.com/pubs/pdf/FR259/FR259.pdf>.
+
+## Parameters
+
+The 2010 Rwanda DHS sampled 12,540 households from 492 PSUs comprising rural villages and urban neighborhoods (30). The sample was stratified by Rwanda's 30 districts, urban areas were oversampled by adding 12 PSUs in Kigali's three districts, and 26 households were sampled from each urban and rural PSU. The average village in Rwanda had 610 occupants according to the sample frame. 
+
+Therefore, the corresponding parameters for the ```gs_sample``` algorithm are
+
+```
+cfg_hh_per_stratum = 416 # 
+cfg_hh_per_urban = 26 # households from each urban PSU
+cfg_hh_per_rural = 26 # households from each rural PSU
+cfg_pop_per_psu = 610 # limit PSU size to the average village size
+```
+
+## Data preparation
+
+We start with two files, a population raster and a shapefile ```RWAshp``` defining the various strata in the census. Here, the strata shapefile  consists of the 30 districts. The population raster can be downloaded from <www.worldpop.org.uk>. For the purposes of this example, we will use the population raster that estimates population in Rwanda for 2010, adjusted using census estimates, where each grid-cell represents the population per pixel. The corresponding raster when downloaded from the WorldPop website is named ```RWA_ppp_v2b_2010_UNadj.tif```.
+
+First, we read in the relevant datasets, and rasterize the strata layer using a field that contains a unique identifier for each polygon.
+
+```
+population_raster <- raster("RWA_ppp_v2b_2010_UNadj.tif") 
+plot(population_raster)
+data(RWAshp)
+strata_raster<-rasterize(RWAshp,population_raster,field="STL.2")
+plot(strata_raster)
+```
+
+We need a raster that defines urban and rural areas as well. Here, we'll define urban areas by determining the population cell density associated with the official proportion of people in an urban area. The 2012 Rwanda census found 16% of people to live in urban areas, so we'll change the most dense cells as urban, until 16% of the population is defined as being in urban areas.
+
+
+```
+total_pop=cellStats(population_raster,stat="sum")
+urban_pop_value = total_pop*.16 
+pop_df = data.frame(index = 1:length(population_raster[]),pop = population_raster[])
+pop_df = pop_df[!is.na(pop_df$pop),]
+pop_df = pop_df[order(pop_df$pop,decreasing = T),]
+pop_df$cumulative_pop = cumsum(pop_df$pop)
+pop_df$urban = 0
+pop_df$urban[which(pop_df$cumulative_pop<=urban_pop_value)] = 1
+urban_raster <- population_raster >= min(subset(pop_df,urban == 1)$pop)
+plot(urban_raster)
+
+```
+
+## Using ```gs_sample```
+
+Now that we have the population, strata, and urbanization rasters, we are ready to use the gridsample algorithm. We exclude any grid cells with a population less than 0.01 to prevent the algorithm from creating overly large sampling areas (```cfg_min_pop_per_cell = 0.01```), also restricting the total PSU size to <10km^2 (```cfg_max_psu_size = 10```). Finally, because we wanted the sample to be representative of both urban and rural areas, we allowed the algorithm to oversample rural or urban areas by setting ```cfg_sample_rururb = TRUE```. We save the output shapefile in ```"C:/User/Project/data/rwanda_psu.shp"```.
+
+
+
+```
+psu_polygons=gs_sample(population_raster = population_raster, 
+strata_raster = strata_raster,
+urban_raster = urban_raster,
+cfg_desired_cell_size = NA,
+cfg_hh_per_stratum = 416,
+cfg_hh_per_urban = 26,
+cfg_hh_per_rural = 26,
+cfg_min_pop_per_cell = 0.01,
+cfg_max_psu_size = 10, 
+cfg_pop_per_psu = 610,
+cfg_sample_rururb = TRUE,
+cfg_sample_spatial = FALSE,
+cfg_sample_spatial_scale = 100,
+output_path="C:/User/Project/data",
+sample_name="rwanda_psu")
+
+plot(psu_polygons)
+```

@@ -1,38 +1,39 @@
 Package: gridsample
 Title: Tools for Grid-Based Survey Sampling Design
-Version: 0.1.3
+Version: 0.2.0
 Author: Dana R. Thomson (University of Southampton), Nick W. Ruktanonchai
     (University of Southampton), Forrest R. Stevens (University of Louisville),
     Marcia Castro (Harvard University), Andrew J. Tatem (University of Southampton)
 Maintainer: Nick Ruktanonchai <nrukt00@gmail.com>
-Description: Multi-stage cluster household surveys are commonly performed by 
-	governments and programs to monitor population demographic, social, 
-	economic, and health outcomes. In these surveys, communities are sampled 
-	in a first  stage of sampling from within subpopulations of interest 
-	(or strata), households are sampled in a second stage of sampling, and 
-	sometimes individuals are listed and further sampled within households. 
-	The first stage of sampling, where communities of sample populations are 
-	defined, are called Primary Sampling Units (PSUs) while the households 
-	are secondary sampling units (SSUs). Census data are typically used to 
-	select PSUs within strata. If census data are outdated, inaccurate, or 
-	not available at fine enough scale, however, gridded population data can 
-	be used instead. This tool selects PSUs within user-defined strata using 
-	gridded population data, given desired numbers of sampled households 
-	within each PSU. The population densities used to create PSUs are drawn 
-	from rasters such as the population data from the WorldPop Project 
-	(http://www.worldpop.org.uk). PSUs are defined within a stratum using a 
-	serpentine sampling method, and can be set to have a certain ratio of 
-	urban and rural PSUs, or to be evenly distributed across a coarse, 
-	user-defined grid.
+Description: Multi-stage cluster surveys of households are commonly performed by 
+	governments and programmes to monitor population-level demographic, social, 
+	economic, and health outcomes. Generally, communities are sampled from 
+	subpopulations (strata) in a first stage, and then households are listed and 
+	sampled in a second stage. In this typical two-stage design, sampled communities 
+	are the Primary Sampling Units (PSUs) and households are the Secondary Sampling 
+	Units (SSUs). Census data typically serve as the sample frame from which PSUs 
+	are selected. However, if census data are outdated inaccurate, or too 
+	geographically course, gridded population data (such as <http://www.worldpop.org.uk>) 
+	can be used as a sample frame instead. GridSample generates PSUs from gridded 
+	population data according to user-specified complex survey design characteristics 
+	and household sample size. In gridded population sampling, like census sampling, 
+	PSUs are selected within each stratum using a serpentine sampling method, and can 
+	be oversampled in urban or rural areas to ensure a minimum sample size in each of 
+	these important sub-domains. Furthermore, because grid cells are uniform in size 
+	and shape, gridded population sampling allows for samples to be representative of
+	both the population and of space, which is not possible with a census sample frame. 
 Depends: R (>= 3.2.3)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: rgdal, raster, data.table, rgeos, geosphere, sp, spatstat,
-        methods, maptools
-RoxygenNote: 5.0.1.9000
+Imports: rgdal (>= 1.2-4), raster (>= 2.5-8), data.table (>= 1.10.4),
+        rgeos (>= 0.3-21), geosphere (>= 1.5-5), sp (>= 1.2-4), deldir
+        (>= 0.1-12), spatstat (>= 1.49-0), methods, maptools (>=
+        0.8-41), spatstat.utils
+RoxygenNote: 6.0.1
 Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2016-11-30 11:52:13 UTC; Nick
+Packaged: 2017-04-09 20:38:22 UTC; Nick
 Repository: CRAN
-Date/Publication: 2016-11-30 15:22:40
+Date/Publication: 2017-04-09 21:01:00 UTC

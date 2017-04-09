@@ -1,0 +1,8 @@
+gridsample v0.2.0 (Update date: 2017-04-05)
+==============
+Changes:
+
+* Added Rwanda 2010 DHS vignette
+* Added cfg_psu_growth parameter to enable or disable PSU growth
+* Fixed incorrect usage of cfg_max_psu_size
+* Additional documentation and example in gs_sample()
