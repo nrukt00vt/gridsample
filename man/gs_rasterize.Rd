@@ -4,29 +4,39 @@
 \alias{gs_rasterize}
 \title{Rasterize polygon layer}
 \usage{
-gs_rasterize(input_features, output_raster, template_raster, binary = FALSE,
-  field = "ID", overwrite = FALSE, format = "GTiff")
+gs_rasterize(input_features, output_raster, template_raster,
+  binary = FALSE, field = "ID", overwrite = FALSE,
+  format = "GTiff")
 }
 \arguments{
-\item{input_features}{SpatialPolygons* object. Name of input shapefile layer. Should be a SpatialPolygons object.}
+\item{input_features}{SpatialPolygons* object. Name of input shapefile
+layer. Should be a SpatialPolygons object.}
 
 \item{output_raster}{Character. Desired name of output raster layer.}
 
-\item{template_raster}{Raster* object. Raster with desired characteristics (resolution, extent) of output raster.}
+\item{template_raster}{Raster* object. Raster with desired characteristics
+(resolution, extent) of output raster.}
 
-\item{binary}{logical. If \code{TRUE}, any non-zero values will be converted to one.}
+\item{binary}{logical. If \code{TRUE}, any non-zero values will be converted
+to one.}
 
 \item{field}{character. Name of variable that output raster should inherit.}
 
-\item{overwrite}{logical. Defines whether to overwrite if \code{output_raster} already exists.}
+\item{overwrite}{logical. Defines whether to overwrite if
+\code{output_raster} already exists.}
 
 \item{format}{character. Desired format of output raster file.}
 }
 \value{
-Vector of values representing the stratum that occurs most often within a given subset of the raster.
+Vector of values representing the stratum that occurs most often
+   within a given subset of the raster.
 }
 \description{
-This function creates a raster layer that adopts values from a defined field in a polygon layer, using \code{rasterize} from the raster package.  This function also converts values to binary if desired, where all zero values are recorded as zero, and all non-zero values are recorded as one.  This function also saves the output raster in the working directory.
+This function creates a raster layer that adopts values from a defined field
+in a polygon layer, using \code{rasterize} from the raster package.  This
+function also converts values to binary if desired, where all zero values
+are recorded as zero, and all non-zero values are recorded as one.  This
+function also saves the output raster in the working directory.
 }
 \author{
 Forrest R. Stevens, \email{forrest.stevens@louisville.edu}

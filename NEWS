@@ -1,7 +1,16 @@
+gridsample v0.2.1 (Update date: 2017-04-05)
+==============
+
+Changes:
+* Linting
+* Fix cfg_desired_cell_size and aligns with paper (https://doi.org/10.1186/s12942-017-0098-4)
+* Implements cfg_random_number as specified in paper (https://doi.org/10.1186/s12942-017-0098-4).
+* Modifies file paths for interoperability in vignette.
+
 gridsample v0.2.0 (Update date: 2017-04-05)
 ==============
-Changes:
 
+Changes:
 * Added Rwanda 2010 DHS vignette
 * Added cfg_psu_growth parameter to enable or disable PSU growth
 * Fixed incorrect usage of cfg_max_psu_size

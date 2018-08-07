@@ -7,13 +7,22 @@
 gs_mode(rast)
 }
 \arguments{
-\item{rast}{\code{data.table} object. This \code{data.table} where each cell that lies within a larger grid cell is represented as a row. For each row, the variable  \code{grid_id} is the ID of the cell from the coarser grid,  \code{sampled} denotes whether a cell has been sampled,  \code{stratum} defines the stratum each cell lies within, and  \code{raster_index} is a unique value for each cell in the raster.}
+\item{rast}{\code{data.table} object. This \code{data.table} where each cell
+that lies within a larger grid cell is represented as a row. For each row,
+the variable  \code{grid_id} is the ID of the cell from the coarser grid,
+\code{sampled} denotes whether a cell has been sampled,  \code{stratum}
+defines the stratum each cell lies within, and  \code{raster_index} is a
+unique value for each cell in the raster.}
 }
 \value{
-Vector of values representing the stratum that occurs most often within a given subset of the raster.
+Vector of values representing the stratum that occurs most often
+  within a given subset of the raster.
 }
 \description{
-For each cell in the user-defined "coarse grid" used to select spatially-representative samples (i.e. when \code{cfg_sample_spatial == TRUE}), this function calculates the stratum that occurs most often within each course grid cell.
+For each cell in the user-defined "coarse grid" used to select
+spatially-representative samples (i.e. when \code{cfg_sample_spatial ==
+TRUE}), this function calculates the stratum that occurs most often within
+each course grid cell.
 }
 \author{
 Forrest R. Stevens, \email{forrest.stevens@louisville.edu}

@@ -7,23 +7,28 @@
 gs_zonal_raster(x, z, stat = "mean", digits = 1, na.rm = TRUE, ...)
 }
 \arguments{
-\item{x}{Raster* layer. The layer that zonal statistics should be calculated from.}
+\item{x}{Raster* layer. The layer that zonal statistics should be calculated
+from.}
 
 \item{z}{Raster* layer. A rasterized version of the zonal layer.}
 
-\item{stat}{character. Name of statistic used to calculate a value across each polygon in \code{z}. ex. "mean", "sum".}
+\item{stat}{character. Name of statistic used to calculate a value across
+each polygon in \code{z}. ex. "mean", "sum".}
 
-\item{digits}{numeric. Number of significant digits in zonal statistic output.}
+\item{digits}{numeric. Number of significant digits in zonal statistic
+output.}
 
 \item{na.rm}{logical. Defines whether to remove \code{NA}}
 
 \item{...}{Other variables}
 }
 \value{
-Vector of values representing the calculated statistic for each polygon, sorted by the order of polygons in the polygon layer.
+Vector of values representing the calculated statistic for each
+   polygon, sorted by the order of polygons in the polygon layer.
 }
 \description{
-This function calculates zonal statstics across a raster layer, for each polygon in a rasterized polygon layer.
+This function calculates zonal statstics across a raster layer, for each
+polygon in a rasterized polygon layer.
 }
 \author{
 Forrest R. Stevens, \email{forrest.stevens@louisville.edu}

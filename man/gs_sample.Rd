@@ -4,41 +4,72 @@
 \alias{gs_sample}
 \title{GridSample sampling algorithm}
 \usage{
-gs_sample(population_raster, strata_raster, urban_raster, cfg_hh_per_stratum,
-  cfg_hh_per_urban, cfg_hh_per_rural, cfg_pop_per_psu,
+gs_sample(population_raster, strata_raster, urban_raster,
+  cfg_hh_per_stratum, cfg_hh_per_urban, cfg_hh_per_rural, cfg_pop_per_psu,
   cfg_sample_rururb = FALSE, cfg_sample_spatial = FALSE,
   cfg_sample_spatial_scale = NA, cfg_desired_cell_size = NA,
-  cfg_max_psu_size = Inf, cfg_min_pop_per_cell = 0, cfg_psu_growth = TRUE,
-  output_path, sample_name)
+  cfg_max_psu_size = Inf, cfg_min_pop_per_cell = 0,
+  cfg_psu_growth = TRUE, cfg_random_number = NA, output_path,
+  sample_name)
 }
 \arguments{
-\item{population_raster}{Raster* layer. Input gridded population dataset to use as sample frame. Values should be number of people in each pixel as a whole number or decimal value.}
+\item{population_raster}{Raster* layer. Input gridded population dataset to
+use as sample frame. Values should be number of people in each pixel as a
+whole number or decimal value.}
 
-\item{strata_raster}{Raster* layer. Raster that defines the stratum numeric ID of each pixel. Generally created by rasterizing a shapefile of polygons that define strata.}
+\item{strata_raster}{Raster* layer. Raster that defines the stratum numeric
+ID of each pixel. Generally created by rasterizing a shapefile of polygons
+that define strata.}
 
-\item{urban_raster}{Raster* layer. Raster of urbanized areas where a cell value of 1 indicates urban cells and 0 indicates rural cells.}
+\item{urban_raster}{Raster* layer. Raster of urbanized areas where a cell
+value of 1 indicates urban cells and 0 indicates rural cells.}
 
-\item{cfg_hh_per_stratum}{numeric. Target household sample size per stratum. In a non-stratified sample, this is the total sample size of households. In a stratified sample, this is the household sample size per stratum.}
+\item{cfg_hh_per_stratum}{numeric. Target household sample size per stratum.
+In a non-stratified sample, this is the total sample size of households.
+In a stratified sample, this is the household sample size per stratum.}
 
-\item{cfg_hh_per_urban}{numeric. Number of households expected to be selected per urban PSU during survey fieldwork.}
+\item{cfg_hh_per_urban}{numeric. Number of households expected to be
+selected per urban PSU during survey fieldwork.}
 
-\item{cfg_hh_per_rural}{numeric. Number of households expected to be selected per rural PSU during survey fieldwork.}
+\item{cfg_hh_per_rural}{numeric. Number of households expected to be
+selected per rural PSU during survey fieldwork.}
 
-\item{cfg_pop_per_psu}{numeric. Minimum population per PSU (e.g. 500 persons).}
+\item{cfg_pop_per_psu}{numeric. Minimum population per PSU (e.g. 500
+persons).}
 
-\item{cfg_sample_rururb}{logical. A flag to oversample rural/urban areas if one domain does not meet the target sample size per stratum. Default is \code{FALSE}.}
+\item{cfg_sample_rururb}{logical. A flag to oversample rural/urban areas if
+one domain does not meet the target sample size per stratum. Default is
+\code{FALSE}.}
 
-\item{cfg_sample_spatial}{logical. A flag to oversample in space ensuring that at least one PSU is selected within each "coarse grid" cell with cell size defined by the user. Default is \code{FALSE}.}
+\item{cfg_sample_spatial}{logical. A flag to oversample in space ensuring
+that at least one PSU is selected within each "coarse grid" cell with cell
+size defined by the user. Default is \code{FALSE}.}
 
-\item{cfg_sample_spatial_scale}{If \code{cfg_sample_spatial == TRUE}, this defines the size in kilometres squared (e.g. 20 for 20km X 20km) of each course grid cell where the algorithm will ensure at least one PSU is located in each coarse grid cell.}
+\item{cfg_sample_spatial_scale}{If \code{cfg_sample_spatial == TRUE}, this
+defines the length in kilometres of the side of the cell (e.g. 20 for
+20km X 20km) of each coarse grid cell where the algorithm will ensure at
+least one PSU is located in each coarse grid cell.}
 
-\item{cfg_desired_cell_size}{numeric. Desired cell size in kilometres squared (e.g. 0.4 for 400m X 400m) for output raster of PSUs. Defaults to NA, which yields an output raster at the same resolution as population_raster.}
+\item{cfg_desired_cell_size}{numeric. Desired length of the side of the cell
+in 100m  (e.g. 4 for 400m X 400m) for output raster of PSUs. Defaults to
+NA, which yields an output raster at the same resolution as
+population_raster.}
 
-\item{cfg_max_psu_size}{numeric. Maximum allowed geographic size of a given PSU in kilometres squared (e.g. 5 for PSUs smaller than 5km X 5km). Defaults to infinity.}
+\item{cfg_max_psu_size}{numeric. Maximum allowed geographic size of a given
+PSU in kilometres squared (e.g. 5 for PSUs smaller than 5km X 5km).
+Defaults to infinity.}
 
-\item{cfg_min_pop_per_cell}{numeric. Minimum population in a raster cell required for it to be considered for sampling. Cells with less than this value will be excluded from the sample. Defaults to 0, therefore including all cells.}
+\item{cfg_min_pop_per_cell}{numeric. Minimum population in a raster cell
+required for it to be considered for sampling. Cells with less than this
+value will be excluded from the sample. Defaults to 0, therefore including
+all cells.}
 
-\item{cfg_psu_growth}{logical. Determines whether to grow PSUs until either there are no available cells or each PSU covers a population defined by \code{cfg_pop_per_psu}.}
+\item{cfg_psu_growth}{logical. Determines whether to grow PSUs until either
+there are no available cells or each PSU covers a population defined by
+\code{cfg_pop_per_psu}.}
+
+\item{cfg_random_number}{numeric. The random number seed to reproduce a
+previous gridded population sample.}
 
 \item{output_path}{character. Output path and folder name.}
 
@@ -48,76 +79,160 @@ gs_sample(population_raster, strata_raster, urban_raster, cfg_hh_per_stratum,
 Shapefile of household survey primary sampling unit (PSU) boundaries
 }
 \description{
-The \code{gs_sample} algorithm creates primary sampling units (PSUs) for multi-stage cluster household surveys based on gridded population data. Typical complex survey design is supported with input of a raster of population counts, a raster of urbanized areas, and a raster of study strata. Each of these rasters need to be in an identical projection and have an identical grid resolution. The algorithm first selects PSU seed cells with a probability proportionate to population size according to strata, rural-urban, and spatial parameters specified, then it optionally grows PSUs around the seed cells until a minimum population threshold is met in each PSU.
+The \code{gs_sample} algorithm creates primary sampling units (PSUs) for
+multi-stage cluster household surveys based on gridded population data.
+Typical complex survey design is supported with input of a raster of
+population counts, a raster of urbanized areas, and a raster of study
+strata. Each of these rasters need to be in an identical projection and have
+an identical grid resolution. The algorithm first selects PSU seed cells
+with a probability proportionate to population size according to strata,
+rural-urban, and spatial parameters specified, then it optionally grows PSUs
+around the seed cells until a minimum population threshold is met in each
+PSU.
 }
 \details{
-A number of sampling features are optional. Oversampling in urban/rural areas, oversampling to be spatially representative, and stratification are not required. At a minimum, the user generates a simple random sample of PSUs in a study area by inputting a \code{population_raster}, defining the study area boundary as one stratum with \code{strata_raster}, defining the output shapefile parameters \code{output_path} and \code{sample_name}, and configuring the parameters \code{cfg_hh_per_stratum}, \code{cfg_hh_per_urban}, \code{cfg_hh_per_rural}, and \code{cfg_pop_per_psu}.  See the "Stratification", "Urban/rural domains", "Spatial sampling", and "PSU size and framework" sections for additional information. Note that all datasets are re-projected into WGS84 before the sampling process begins. A real-world example can be seen using the code \code{vignette("Rwanda")}, a vignette that replicates the sample design of the 2010 Rwanda DHS survey.
+A number of sampling features are optional. Oversampling in urban/rural
+areas, oversampling to be spatially representative, and stratification are
+not required. At a minimum, the user generates a simple random sample of
+PSUs in a study area by inputting a \code{population_raster}, defining the
+study area boundary as one stratum with \code{strata_raster}, defining the
+output shapefile parameters \code{output_path} and \code{sample_name}, and
+configuring the parameters \code{cfg_hh_per_stratum},
+\code{cfg_hh_per_urban}, \code{cfg_hh_per_rural}, and
+\code{cfg_pop_per_psu}.  See the "Stratification", "Urban/rural domains",
+"Spatial sampling", and "PSU size and framework" sections for additional
+information. Note that all datasets are re-projected into WGS84 before the
+sampling process begins. A real-world example can be seen using the code
+\code{vignette("Rwanda")}, a vignette that replicates the sample design of
+the 2010 Rwanda DHS survey.
 }
 \section{Stratification}{
 
-To stratify the sample, define geographic strata boundaries with \code{strata_raster}, and specify the sample size per strata with \code{cfg_hh_per_stratum}. For example, if a national survey will sample 10,000 households from 5 provinces, then \code{cfg_hh_per_stratum = 2000}. The parameter \code{cfg_hh_per_stratum} is the minimum sample size to generate representative population statistics. In some surveys, strata follow urban/rural boundaries within administrative units. If this is the case, then \code{strata_raster} should include the boundaries of urban and rural sampling areas within each administrative area, and \code{cfg_hh_per_stratum} should reflect the correct sample size per stratum - for example, a national sample of 10,000 households from each urban and rural areas in 5 provinces would have \code{cfg_hh_per_stratum = 1000}.
+To stratify the sample, define geographic strata boundaries with
+\code{strata_raster}, and specify the sample size per strata with
+\code{cfg_hh_per_stratum}. For example, if a national survey will sample
+10,000 households from 5 provinces, then \code{cfg_hh_per_stratum = 2000}.
+The parameter \code{cfg_hh_per_stratum} is the minimum sample size to
+generate representative population statistics. In some surveys, strata
+follow urban/rural boundaries within administrative units. If this is the
+case, then \code{strata_raster} should include the boundaries of urban and
+rural sampling areas within each administrative area, and
+\code{cfg_hh_per_stratum} should reflect the correct sample size per stratum
+- for example, a national sample of 10,000 households from each urban and
+rural areas in 5 provinces would have \code{cfg_hh_per_stratum = 1000}.
 }
 
 \section{Urban/rural domains}{
 
-If urban/rural populations are not part of the stratification scheme, then they are often treated as a sub-domain. Sub-domains represent important sub-populations for which representative statistics are generated from the survey data, and thus each sub-domain (at the national-level) should meet the minimum sample size specified for each stratum. If either the urban/rural sub-domain does not include enough households to generate population statistics with the desired precision, then extra PSUs are oversampled in the smaller sub-domain. To implement this step with \code{gs_sample}, set \code{cfg_sample_rururb = 1}. In practice, rural areas are often more difficult and expensive to visit, and thus a greater number of households might be sampled from rural PSUs than urban PSUs. This is why the user may specify different numbers of households to be sampled from each urban PSUs (\code{cfg_hh_per_urban}) and rural PSUs (\code{cfg_hh_per_rural}); if the same number of households will be sampled from all PSUs, then configure both of these parameters with the same value. Note, the number of PSUs that will be generated in each stratum is \code{cfg_hh_per_stratum} divided by some number between \code{cfg_hh_per_urban} and \code{cfg_hh_per_rural}.
+If urban/rural populations are not part of the stratification scheme, then
+they are often treated as a sub-domain. Sub-domains represent important
+sub-populations for which representative statistics are generated from the
+survey data, and thus each sub-domain (at the national-level) should meet
+the minimum sample size specified for each stratum. If either the
+urban/rural sub-domain does not include enough households to generate
+population statistics with the desired precision, then extra PSUs are
+oversampled in the smaller sub-domain. To implement this step with
+\code{gs_sample}, set \code{cfg_sample_rururb = 1}. In practice, rural areas
+are often more difficult and expensive to visit, and thus a greater number
+of households might be sampled from rural PSUs than urban PSUs. This is why
+the user may specify different numbers of households to be sampled from each
+urban PSUs (\code{cfg_hh_per_urban}) and rural PSUs
+(\code{cfg_hh_per_rural}); if the same number of households will be sampled
+from all PSUs, then configure both of these parameters with the same value.
+Note, the number of PSUs that will be generated in each stratum is
+\code{cfg_hh_per_stratum} divided by some number between
+\code{cfg_hh_per_urban} and \code{cfg_hh_per_rural}.
 }
 
 \section{Spatial sampling}{
 
-To select a sample that is both representative of the population and of space, set \code{cfg_sample_spatial = 1} and specify \code{cfg_sample_spatial_scale}, the spatial scale at which the sample should be representative. The spatial scale should be meaningful; for example, it will facilitate small area estimates with limited statistical error for administrative units that are smaller than the stratification units. Determining an appropriate spatial scale might take trial and error. If the study area has large regions of sparse population, a typical non-spatially representative sample will follow the population distribution and have large areas without a PSU. In this case, the user might need to increase the spatial resolution \code{cfg_sample_spatial_scale} of the sample, or force the algorithm to generate more PSUs in each stratum by increasing \code{cfg_hh_per_stratum} and/or reducing \code{cfg_hh_per_urban} and \code{cfg_hh_per_rural}.
+To select a sample that is both representative of the population
+and of space, set \code{cfg_sample_spatial = 1} and specify
+\code{cfg_sample_spatial_scale}, the spatial scale at which the sample
+should be representative. The spatial scale should be meaningful; for
+example, it will facilitate small area estimates with limited statistical
+error for administrative units that are smaller than the stratification
+units. Determining an appropriate spatial scale might take trial and error.
+If the study area has large regions of sparse population, a typical
+non-spatially representative sample will follow the population distribution
+and have large areas without a PSU. In this case, the user might need to
+increase the spatial resolution \code{cfg_sample_spatial_scale} of the
+sample, or force the algorithm to generate more PSUs in each stratum by
+increasing \code{cfg_hh_per_stratum} and/or reducing \code{cfg_hh_per_urban}
+and \code{cfg_hh_per_rural}.
 }
 
 \section{PSU size and fieldwork}{
 
-Four additional parameters can be configured to deal with idiosyncrasies of gridded population data and improve feasibility of fieldwork. The user can set a maximum geographic size of PSU in kilometres squared, \code{cfg_max_psu_size}. We recommend choosing a size that can feasibly be visited by a field team on foot during one day. The user might also specify which cells are included in the sample frame with \code{cfg_min_pop_per_cell}. Selection of a sensible value is highly dependent on the gridded population dataset being used, and the scale of the input data (e.g. 200m X 200m grid cells). The cell size of the output raster can be specified with \code{cfg_desired_cell_size}. Gridded population datasets generated from old population figures or old covariates may be inaccurate at a very local scale (e.g. 100m X 100m cells), but will generally increase in accuracy as cells are aggregated (e.g. 300m X 300m cells). Finally, the PSU growth portion of the algorithm can be switched off by setting \code{cfg_psu_growth = FALSE} resulting in a sample of single grid cells (and their centroids).
+Four additional parameters can be configured to deal with idiosyncrasies of
+gridded population data and improve feasibility of fieldwork. The user can
+set a maximum geographic size of PSU in kilometres squared,
+\code{cfg_max_psu_size}. We recommend choosing a size that can feasibly be
+visited by a field team on foot during one day. The user might also specify
+which cells are included in the sample frame with
+\code{cfg_min_pop_per_cell}. Selection of a sensible value is highly
+dependent on the gridded population dataset being used, and the scale of the
+input data (e.g. 200m X 200m grid cells). The cell size of the output raster
+can be specified with \code{cfg_desired_cell_size}. Gridded population
+datasets generated from old population figures or old covariates may be
+inaccurate at a very local scale (e.g. 100m X 100m cells), but will
+generally increase in accuracy as cells are aggregated (e.g. 300m X 300m
+cells). Finally, the PSU growth portion of the algorithm can be switched off
+by setting \code{cfg_psu_growth = FALSE} resulting in a sample of single
+grid cells (and their centroids).
 }
 
 \examples{
 require(raster)
-poprast <- raster(ncols=100,nrows=100,xmx=10,xmn=9,ymn=9,ymx=10,
-crs=CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"),
-vals=runif(10000,0,100))
-stratarast <- raster(ncols=100,nrows=100,xmx=10,xmn=9,ymn=9,ymx=10,
-crs=CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"),
-vals=c(rep(1,times=5000),rep(2,times=5000)))
+
+poprast <- raster(ncols = 100, nrows = 100, xmx = 10, xmn = 9, ymn = 9, ymx = 10,
+   crs = CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"),
+   vals = runif(10000, 0, 100))
+stratarast <- raster(ncols = 100, nrows = 100, xmx = 10, xmn = 9, ymn = 9, ymx = 10,
+   crs = CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"),
+   vals = c(rep(1, times = 5000), rep(2, times = 5000)))
 urbanrast <- poprast > 25
-example_1 <- gs_sample(population_raster = poprast, 
-         strata_raster = stratarast, 
-         urban_raster = urbanrast, 
-         cfg_hh_per_stratum = 800,
-         cfg_hh_per_urban = 20, 
-         cfg_hh_per_rural = 20, 
-         cfg_pop_per_psu = 500,
-         cfg_sample_rururb = TRUE, 
-         cfg_sample_spatial = FALSE, 
-         cfg_sample_spatial_scale = 100,
-         cfg_desired_cell_size = NA,
-         cfg_max_psu_size = 5,
-         cfg_min_pop_per_cell = 0.01,
-         output_path=tempdir(),
-         sample_name="Example")
+
+example_1 <- gs_sample(
+    population_raster = poprast,
+    strata_raster = stratarast,
+    urban_raster = urbanrast,
+    cfg_hh_per_stratum = 800,
+    cfg_hh_per_urban = 20,
+    cfg_hh_per_rural = 20,
+    cfg_pop_per_psu = 500,
+    cfg_sample_rururb = TRUE,
+    cfg_sample_spatial = FALSE,
+    cfg_sample_spatial_scale = 100,
+    cfg_desired_cell_size = NA,
+    cfg_max_psu_size = 5,
+    cfg_min_pop_per_cell = 0.01,
+    output_path = tempdir(),
+    sample_name="Example"
+)
 plot(example_1)
 
-
-#### Example two is the identical, except PSUs aren't grown, 
+#### Example two is the identical, except PSUs aren't grown,
 #### so the shapefile returned includes a single grid cell for each PSU.
 
-example_2 <- gs_sample(population_raster = poprast, 
-         strata_raster = stratarast, 
-         urban_raster = urbanrast, 
-         cfg_hh_per_stratum = 800,
-         cfg_hh_per_urban = 20, 
-         cfg_hh_per_rural = 20, 
-         cfg_pop_per_psu = 500,
-         cfg_sample_rururb = TRUE, 
-         cfg_sample_spatial = FALSE, 
-         cfg_sample_spatial_scale = 100,
-         cfg_desired_cell_size = NA,
-         cfg_max_psu_size = 5,
-         cfg_min_pop_per_cell = 0.01,
-         cfg_psu_growth = FALSE,
-         output_path=tempdir(),
-         sample_name="Example_without_growth")
+example_2 <- gs_sample(
+   population_raster = poprast,
+   strata_raster = stratarast,
+   urban_raster = urbanrast,
+   cfg_hh_per_stratum = 800,
+   cfg_hh_per_urban = 20,
+   cfg_hh_per_rural = 20,
+   cfg_pop_per_psu = 500,
+   cfg_sample_rururb = TRUE,
+   cfg_sample_spatial = FALSE,
+   cfg_sample_spatial_scale = 100,
+   cfg_desired_cell_size = NA,
+   cfg_max_psu_size = 5,
+   cfg_min_pop_per_cell = 0.01,
+   cfg_psu_growth = FALSE,
+   output_path = tempdir(),
+   sample_name="Example_without_growth"
+)
 plot(example_2)
+
 }
