@@ -411,9 +411,11 @@ gs_sample <- function(population_raster,
     if (total_stratum < cfg_hh_per_stratum) {
       while (total_stratum < cfg_hh_per_stratum) {
         newid <- sample(psu_data[selected == 0]$id, 1)
+        if( !is.na(urban_vec[newid])) {
         total_stratum <- total_stratum +
           (urban_vec[newid] == 0) * cfg_hh_per_rural +
           (urban_vec[newid] == 1) * cfg_hh_per_urban
+        }
         psu_data[id == newid]$selected <- 1
       }
     }
