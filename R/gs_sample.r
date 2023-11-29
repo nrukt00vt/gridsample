@@ -276,6 +276,7 @@ gs_sample <- function(population_raster,
   if (sp::proj4string(strata_raster) != "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0") {
     strata_raster <- projectRaster(strata_raster,
       crs = sp::CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
+      values(strata_raster) <- as.integer(round(values(strata_raster),0))
   }
 
   ## Aggregate to meet desired resolution if lower than current
@@ -411,9 +412,11 @@ gs_sample <- function(population_raster,
     if (total_stratum < cfg_hh_per_stratum) {
       while (total_stratum < cfg_hh_per_stratum) {
         newid <- sample(psu_data[selected == 0]$id, 1)
+        if( !is.na(urban_vec[newid])) {
         total_stratum <- total_stratum +
           (urban_vec[newid] == 0) * cfg_hh_per_rural +
           (urban_vec[newid] == 1) * cfg_hh_per_urban
+        }
         psu_data[id == newid]$selected <- 1
       }
     }
