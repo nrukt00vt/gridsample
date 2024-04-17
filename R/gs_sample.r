@@ -277,7 +277,7 @@ gs_sample <- function(population_raster,
     strata_raster <- projectRaster(strata_raster,
       crs = sp::CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
       values(strata_raster) <- as.integer(round(values(strata_raster),0))
-    }
+  }
 
   ## Aggregate to meet desired resolution if lower than current
   if (!is.na(cfg_desired_cell_size)) {
