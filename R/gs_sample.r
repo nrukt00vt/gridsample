@@ -121,11 +121,12 @@ globalVariables(names = c("selected", "id", "grid_id", "stratum", "V1",
 #' by setting \code{cfg_psu_growth = FALSE} resulting in a sample of single
 #' grid cells (and their centroids).
 #'
-#' @import raster rgdal geosphere rgeos maptools spatstat.utils
+#' @import raster sp geosphere spatstat.utils
 #' @importFrom utils flush.console
 #' @importFrom data.table data.table setkey
-#' @importFrom spatstat dirichlet
+#' @importFrom spatstat.geom dirichlet
 #' @importFrom methods as
+#' @importFrom sf st_as_sfc st_as_sf st_write
 #'
 #' @param population_raster Raster* layer. Input gridded population dataset to
 #'    use as sample frame. Values should be number of people in each pixel as a
@@ -704,8 +705,8 @@ gs_sample <- function(population_raster,
       data = as.data.frame(raster_data[sampled == 1]),
       proj4string = sp::CRS(sp::proj4string(population_raster)))
     ## Create Voronoi polygons around each seed PSU cell
-    psuvoronoi <- as(dirichlet(spatstat::as.ppp(psu_index@coords,
-      W = extent(population_raster)[1:4])), "SpatialPolygons")
+    psuvoronoi <- as(st_as_sfc(dirichlet(spatstat.geom::as.ppp(psu_index@coords,
+      W = extent(population_raster)[1:4]))), "Spatial")
     psuvoronoi$sample_ids <- psu_index$sample_ids
     psuvoronoi$stratum <- psu_index$stratum
     voronoirast <- rasterize(psuvoronoi, population_raster,
@@ -928,8 +929,8 @@ gs_sample <- function(population_raster,
     "yCent"
   )
 
-  writeOGR(psu_polygons, dsn = output_path, layer = sample_name,
-    driver = "ESRI Shapefile", check_exists = TRUE, overwrite_layer = TRUE)
-
+  sf::st_write(obj = sf::st_as_sf(psu_polygons), dsn = paste0(output_path, "/", sample_name, ".shp"),
+               driver = "ESRI Shapefile", delete_dsn = TRUE)
+  
   return(psu_polygons)
 }
