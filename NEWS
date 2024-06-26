@@ -2,7 +2,7 @@ gridsample v0.2.3 (Update date: 2024-04-25)
 ==============
 
 Changes:
-* Drop dependencies on retired pacakges (rgdal, rgeos, maptools)
+* Drop dependencies on retired packages (rgdal, rgeos, maptools)
 
 gridsample v0.2.2 (Update date: 2024-04-17)
 ==============
