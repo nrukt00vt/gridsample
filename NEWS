@@ -1,3 +1,16 @@
+gridsample v0.2.3 (Update date: 2024-04-25)
+==============
+
+Changes:
+* Drop dependencies on retired packages (rgdal, rgeos, maptools)
+
+gridsample v0.2.2 (Update date: 2024-04-17)
+==============
+
+Changes:
+* Fix gs_sample failing if the raster contains NA
+* Fix raster reprojection generating non-integer strata labels and leads to an error
+
 gridsample v0.2.1 (Update date: 2017-04-05)
 ==============
 

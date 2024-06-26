@@ -1,6 +1,6 @@
 Package: gridsample
 Title: Tools for Grid-Based Survey Sampling Design
-Version: 0.2.2
+Version: 0.2.3
 Authors@R: c(
   person("Dana", "R. Thomson", comment = "University of Southampton", role = "aut"),
   person("Nick", "Ruktanonchai", email = "nrukt00@gmail.com",
@@ -8,7 +8,9 @@ Authors@R: c(
   person("Forrest", "R. Stevens", comment = "University of Louisville", role = "aut"),
   person("Marcia", "Castro", comment = "Harvard University", role = "aut"),
   person("Andrew", "J. Tatem", comment = "University of Southampton", role = "aut"),
-  person("Guilherme", "A. Zagatti", comment = "Flowminder", role = "ctb"))
+  person("Guilherme", "A. Zagatti", comment = "Flowminder", role = "ctb"),
+  person("Egor", "Kotov", comment = "Max Planck Institute for Demographic Research", role = "ctb"))
+Maintainer: Nick Ruktanonchai <nrukt00@gmail.com>
 Description: Multi-stage cluster surveys of households are commonly performed by
   governments and programmes to monitor population-level demographic, social,
   economic, and health outcomes. Generally, communities are sampled from
@@ -17,7 +19,7 @@ Description: Multi-stage cluster surveys of households are commonly performed by
   communities are the Primary Sampling Units (PSUs) and households are the
   Secondary Sampling Units (SSUs). Census data typically serve as the sample
   frame from which PSUs are selected. However, if census data are outdated
-  inaccurate, or too geographically course, gridded population data (such as
+  inaccurate, or too geographically coarse, gridded population data (such as
   <http://www.worldpop.org.uk>) can be used as a sample frame instead.
   GridSample (<doi:10.1186/s12942-017-0098-4>) generates PSUs from
   gridded population data according to user-specified complex survey design
@@ -32,22 +34,14 @@ Depends: R (>= 3.2.3)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: rgdal (>= 1.2-4), raster (>= 2.5-8), data.table (>= 1.10.4),
-        rgeos (>= 0.3-21), geosphere (>= 1.5-5), sp (>= 1.2-4),
-        spatstat (>= 1.49-0), methods, maptools (>= 0.8-41),
-        spatstat.utils
-RoxygenNote: 6.1.0
+Imports: raster (>= 2.5-8), data.table (>= 1.10.4),
+        geosphere (>= 1.5-5), sp (>= 1.2-4), sf,
+        methods,
+        spatstat.utils, spatstat.geom
+RoxygenNote: 7.3.1
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
 NeedsCompilation: no
 Packaged: 2018-08-07 13:12:06 UTC; nr1e14
 Repository: CRAN
 Date/Publication: 2018-08-07 13:50:03 UTC
-Author: Dana R. Thomson [aut] (University of Southampton),
-  Nick Ruktanonchai [cre] (University of Southampton),
-  Forrest R. Stevens [aut] (University of Louisville),
-  Marcia Castro [aut] (Harvard University),
-  Andrew J. Tatem [aut] (University of Southampton),
-  Guilherme A. Zagatti [ctb] (Flowminder),
-  Egor Kotov [ctb] (Max Planck Institute for Demographic Research)
-Maintainer: Nick Ruktanonchai <nrukt00@gmail.com>
